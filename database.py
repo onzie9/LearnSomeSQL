@@ -61,7 +61,7 @@ def generate_kpi_data():
     kpi_9 = np.random.binomial(n=100, p=0.5)  # Binomial distribution with n=100, p=0.5
     kpi_10 = np.random.exponential(scale=200)
 
-    # Introduce some randomness and outliers
+    # Introduce some randomness and outliers to all kpis.
     if random.random() < 0.05:  # 5% chance for outlier
         kpi_1 *= random.randint(100, 1000)
         kpi_2 *= random.randint(50, 500)
@@ -76,7 +76,6 @@ def generate_kpi_data():
     if random.random() < 0.001:  # .1% chance for outlier
         kpi_9 *= random.randint(10, 1000)
         kpi_10 *= random.randint(1, 5)/10
-
 
     # Introduce some NaN values randomly
     kpi_values = [kpi_1, kpi_2, kpi_3, kpi_4, kpi_5, kpi_6, kpi_7, kpi_8, kpi_9, kpi_10]
