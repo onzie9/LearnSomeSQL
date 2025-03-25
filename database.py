@@ -65,10 +65,22 @@ def generate_kpi_data():
     if random.random() < 0.05:  # 5% chance for outlier
         kpi_1 *= random.randint(100, 1000)
         kpi_2 *= random.randint(50, 500)
+    if random.random() < 0.02:  # 2% chance for outlier
+        kpi_3 *= random.randint(-5, -1)
+        kpi_4 *= random.randint(10, 1000)
+    if random.random() < 0.01:  # 1% chance for outlier
+        kpi_5 *= random.randint(10, 1000)
+        kpi_6 *= random.randint(-10, -5)
+        kpi_7 *= random.randint(100, 1000)
+        kpi_8 *= random.randint(50, 500)
+    if random.random() < 0.001:  # .1% chance for outlier
+        kpi_9 *= random.randint(10, 1000)
+        kpi_10 *= random.randint(1, 5)/10
+
 
     # Introduce some NaN values randomly
     kpi_values = [kpi_1, kpi_2, kpi_3, kpi_4, kpi_5, kpi_6, kpi_7, kpi_8, kpi_9, kpi_10]
-    kpi_values = [None if random.random() < 0.1 else value for value in kpi_values]  # 10% chance of NaN
+    kpi_values = [None if random.random() < 0.01 else value for value in kpi_values]  # 1% chance of NaN
 
     return kpi_values
 
