@@ -62,6 +62,7 @@ def generate_kpi_data():
     kpi_10 = np.random.exponential(scale=200)
 
     # Introduce some randomness and outliers to all kpis.
+    # nothing change
     if random.random() < 0.05:  # 5% chance for outlier
         kpi_1 *= random.randint(100, 1000)
         kpi_2 *= random.randint(50, 500)
