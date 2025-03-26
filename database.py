@@ -2,18 +2,21 @@ import sqlite3
 import numpy as np
 import random
 from countries_cities import us_cities_for_db, asian_cities_for_db, european_cities_for_db, african_cities_for_db, oceania_cities_for_db, south_american_cities_for_db
+from more_data import country_name, date_list_weeks
 
 # Connect to SQLite database (it will be created if it doesn't exist)
 conn = sqlite3.connect('synthetic_cities_kpi.db')
 cursor = conn.cursor()
 
 # Create a table for storing states, cities, and KPIs
+cursor.execute('''DROP TABLE cities_kpis''')
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS cities_kpis (
     id INTEGER PRIMARY KEY,
     state TEXT,
     city TEXT,
     country TEXT,
+    date TEXT,
     kpi_1 REAL,
     kpi_2 REAL,
     kpi_3 REAL,
@@ -24,6 +27,18 @@ CREATE TABLE IF NOT EXISTS cities_kpis (
     kpi_8 REAL,
     kpi_9 REAL,
     kpi_10 REAL
+)
+''')
+
+cursor.execute('''DROP TABLE countries_misc_data''')
+cursor.execute('''
+CREATE TABLE countries_misc_data (
+    id INTEGER PRIMARY KEY,
+    country TEXT,
+    date TEXT,
+    leader TEXT,
+    address TEXT,
+    motto TEXT
 )
 ''')
 
@@ -46,7 +61,6 @@ all_countries_cities = {**us_states_cities,
                         **oceania_countries_cities,
                         **south_american_countries_cities
                         }
-
 
 # Function to generate random KPI data
 def generate_kpi_data():
@@ -90,18 +104,28 @@ for country, cities in all_countries_cities.items():
     for city in cities:
         # For US states, add the state info
         state = next((state for state in us_states_cities if country == state), None)
+        for d in date_list_weeks:
+            kpi_values = generate_kpi_data()
+            cursor.execute('''
+                INSERT INTO cities_kpis (state, city, country, date, kpi_1, kpi_2, kpi_3, kpi_4, kpi_5, kpi_6, kpi_7, kpi_8, kpi_9, kpi_10)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (state, city, country, d, *kpi_values))
 
-        kpi_values = generate_kpi_data()
-        cursor.execute('''
-            INSERT INTO cities_kpis (state, city, country, kpi_1, kpi_2, kpi_3, kpi_4, kpi_5, kpi_6, kpi_7, kpi_8, kpi_9, kpi_10)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (state, city, country, *kpi_values))
+for country in country_name.items():
+    c = country[0][0]
+    d = country[0][1]
+    data = country[1].values()
+
+    cursor.execute('''
+    INSERT INTO countries_misc_data (country, date, leader, address, motto)
+    VALUES (?, ?, ?, ?, ?)
+    ''', (c, d, *data))
 
 # Commit the transaction and close the connection
 conn.commit()
 
 # Query to verify the data
-cursor.execute('''SELECT * FROM cities_kpis where country is 'FI' LIMIT 10''')
+cursor.execute('''SELECT * FROM countries_misc_data where country is 'FI'  ''')
 rows = cursor.fetchall()
 for row in rows:
     print(row)
