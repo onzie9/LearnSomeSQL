@@ -9,7 +9,8 @@ conn = sqlite3.connect('synthetic_cities_kpi.db')
 cursor = conn.cursor()
 
 # Create a table for storing states, cities, and KPIs
-cursor.execute('''DROP TABLE cities_kpis''')
+
+cursor.execute('''DROP TABLE IF EXISTS cities_kpis''')
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS cities_kpis (
     id INTEGER PRIMARY KEY,
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS cities_kpis (
 )
 ''')
 
-cursor.execute('''DROP TABLE countries_misc_data''')
+cursor.execute('''DROP TABLE IF EXISTS countries_misc_data''')
 cursor.execute('''
 CREATE TABLE countries_misc_data (
     id INTEGER PRIMARY KEY,
